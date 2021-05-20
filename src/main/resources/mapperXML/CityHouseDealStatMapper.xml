@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxg.house.viewer.mapper.CityHouseDealStatMapper">
+
+    <!--<cache/>-->
+
+    <select id="zzCountyStatDealCount" resultType="com.fxg.house.viewer.dto.ZZCountyStatDTO">
+        SELECT deal_year,deal_month,
+        MAX(CASE county_code WHEN 'eq' THEN deal_count ELSE 0 END) eq,
+        MAX(CASE county_code WHEN 'gc' THEN deal_count ELSE 0 END) gc,
+        MAX(CASE county_code WHEN 'hj' THEN deal_count ELSE 0 END) hj,
+        MAX(CASE county_code WHEN 'js' THEN deal_count ELSE 0 END) js,
+        MAX(CASE county_code WHEN 'zy' THEN deal_count ELSE 0 END) zy,
+        MAX(CASE county_code WHEN 'zd' THEN deal_count ELSE 0 END) zd,
+        MAX(CASE county_code WHEN 'gx' THEN deal_count ELSE 0 END) gx,
+        MAX(CASE county_code WHEN 'jk' THEN deal_count ELSE 0 END) jk
+        FROM city_house_deal_stat GROUP BY deal_year,deal_month
+    </select>
+
+
+    <select id="zzCountyStatDealAvgPrice" resultType="com.fxg.house.viewer.dto.ZZCountyStatDTO">
+        SELECT deal_year,deal_month,
+        MAX(CASE county_code WHEN 'eq' THEN deal_avg_price ELSE 0 END) eq,
+        MAX(CASE county_code WHEN 'gc' THEN deal_avg_price ELSE 0 END) gc,
+        MAX(CASE county_code WHEN 'hj' THEN deal_avg_price ELSE 0 END) hj,
+        MAX(CASE county_code WHEN 'js' THEN deal_avg_price ELSE 0 END) js,
+        MAX(CASE county_code WHEN 'zy' THEN deal_avg_price ELSE 0 END) zy,
+        MAX(CASE county_code WHEN 'zd' THEN deal_avg_price ELSE 0 END) zd,
+        MAX(CASE county_code WHEN 'gx' THEN deal_avg_price ELSE 0 END) gx,
+        MAX(CASE county_code WHEN 'jk' THEN deal_avg_price ELSE 0 END) jk
+        FROM city_house_deal_stat GROUP BY deal_year,deal_month
+    </select>
+
+
+    <select id="zzCountyStatSecondCount" resultType="com.fxg.house.viewer.dto.ZZCountyStatDTO">
+        SELECT deal_year,deal_month,
+        MAX(CASE county_code WHEN 'eq' THEN second_count ELSE 0 END) eq,
+        MAX(CASE county_code WHEN 'gc' THEN second_count ELSE 0 END) gc,
+        MAX(CASE county_code WHEN 'hj' THEN second_count ELSE 0 END) hj,
+        MAX(CASE county_code WHEN 'js' THEN second_count ELSE 0 END) js,
+        MAX(CASE county_code WHEN 'zy' THEN second_count ELSE 0 END) zy,
+        MAX(CASE county_code WHEN 'zd' THEN second_count ELSE 0 END) zd,
+        MAX(CASE county_code WHEN 'gx' THEN second_count ELSE 0 END) gx,
+        MAX(CASE county_code WHEN 'jk' THEN second_count ELSE 0 END) jk
+        FROM city_house_deal_stat GROUP BY deal_year,deal_month
+    </select>
+
+
+    <select id="zzCountyStatSecondAvgPrice" resultType="com.fxg.house.viewer.dto.ZZCountyStatDTO">
+        SELECT deal_year,deal_month,
+        MAX(CASE county_code WHEN 'eq' THEN second_avg_price ELSE 0 END) eq,
+        MAX(CASE county_code WHEN 'gc' THEN second_avg_price ELSE 0 END) gc,
+        MAX(CASE county_code WHEN 'hj' THEN second_avg_price ELSE 0 END) hj,
+        MAX(CASE county_code WHEN 'js' THEN second_avg_price ELSE 0 END) js,
+        MAX(CASE county_code WHEN 'zy' THEN second_avg_price ELSE 0 END) zy,
+        MAX(CASE county_code WHEN 'zd' THEN second_avg_price ELSE 0 END) zd,
+        MAX(CASE county_code WHEN 'gx' THEN second_avg_price ELSE 0 END) gx,
+        MAX(CASE county_code WHEN 'jk' THEN second_avg_price ELSE 0 END) jk
+        FROM city_house_deal_stat GROUP BY deal_year,deal_month
+    </select>
+
+    <select id="getCityLastMonth" resultType="com.fxg.house.viewer.entity.CityHouseDealStat">
+        select * from city_house_deal_stat where city_code = #{cityCode} order by deal_year desc,deal_month desc limit 1
+    </select>
+
+    <select id="cityLastMonthDeal" resultType="com.fxg.house.viewer.entity.CityHouseDealStat">
+        select * from city_house_deal_stat where city_code = #{cityCode} and deal_year = #{dealYear}
+        and deal_month = #{dealMonth} order by deal_avg_price
+    </select>
+</mapper>

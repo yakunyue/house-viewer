@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxg.house.viewer.mapper.StreetMapper">
+
+    <!--<cache/>-->
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into street
+        (name, code,county_id,county_name,county_code, city_id,city_code,city_name,province_id,province_name)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.name},
+            #{item.code},
+            #{item.countyId},
+            #{item.countyName},
+            #{item.countyCode},
+            #{item.cityId},
+            #{item.cityCode},
+            #{item.cityName},
+            #{item.provinceId},
+            #{item.provinceName}
+            )
+        </foreach>
+    </insert>
+
+    <select id="getStreetList" resultType="com.fxg.house.viewer.entity.Street">
+        select * from street where city_code = #{cityCode} and county_code = #{countyCode}
+    </select>
+
+    <update id="updateDay">
+        update street set update_day = #{updateDay} where id = #{id}
+    </update>
+
+    <select id="queryThisDayStreet" resultType="com.fxg.house.viewer.entity.Street">
+        SELECT DISTINCT st.* FROM county_init_record cir LEFT JOIN street st
+        ON st.county_code = cir.county_code
+        WHERE st.update_day = #{updateDay} or st.update_day = #{nextUpdateDay}
+    </select>
+
+    <select id="getStreetListByCode" resultType="com.fxg.house.viewer.entity.Street">
+        select * from street where city_code = #{cityCode} and code = #{streetCode}
+    </select>
+
+    <select id="queryByCodes" resultType="com.fxg.house.viewer.entity.Street">
+        select * from street where code in (
+        <foreach collection="list" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+    </select>
+</mapper>

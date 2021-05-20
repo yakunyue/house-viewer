@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxg.house.viewer.mapper.CommunityHistoryDealMapper">
+    <!--<cache/>-->
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into community_history_deal
+        (community_id, lianjia_community_id, lianjia_house_id, model, area, face_to, fitment_situation, floor_type,
+        total_floor_num, completion_year,
+        building_type, deal_unit_price, five_years, list_price, deal_date, deal_month, deal_year, deal_cycle,
+        deal_price, city_code, county_code,street_code)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.communityId},
+            #{item.lianjiaCommunityId},
+            #{item.lianjiaHouseId},
+            #{item.model},
+            #{item.area},
+            #{item.faceTo},
+            #{item.fitmentSituation},
+            #{item.floorType},
+            #{item.totalFloorNum},
+            #{item.completionYear},
+            #{item.buildingType},
+            #{item.dealUnitPrice},
+            #{item.fiveYears},
+            #{item.listPrice},
+            #{item.dealDate},
+            #{item.dealMonth},
+            #{item.dealYear},
+            #{item.dealCycle},
+            #{item.dealPrice},
+            #{item.cityCode},
+            #{item.countyCode},
+            #{item.streetCode}
+            )
+        </foreach>
+    </insert>
+
+    <select id="queryAlreadyExist" resultType="com.fxg.house.viewer.entity.CommunityHistoryDeal">
+        select id,lianjia_house_id,deal_date from community_history_deal where lianjia_house_id in (
+        <foreach collection="list" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+    </select>
+
+    <select id="queryPriceChange" resultType="com.fxg.house.viewer.dto.PriceChangeDTO">
+        SELECT dh.lianjia_community_id,dh.street_code,dh.county_code,dh.city_code,dh.deal_year,deal_month,COUNT(0)
+        deal_num,
+        CEIL(AVG(AREA)) avg_area,
+        CEIL(AVG(dh.list_price_pm)) list_price_avg,
+        CEIL(AVG(dh.deal_price_pm)) deal_price_avg FROM
+        (SELECT lianjia_community_id,street_code,county_code,city_code,deal_year,deal_month,deal_date,AREA,
+        list_price*10000 DIV AREA list_price_pm,
+        deal_price*10000 DIV AREA deal_price_pm
+        FROM community_history_deal) as dh
+        WHERE
+        dh.city_code = #{cityCode}
+        <if test="countyCode!=null and countyCode!=''">
+            AND county_code = #{countyCode}
+        </if>
+        <if test="streetCode!=null and streetCode!=''">
+            AND street_code = #{streetCode}
+        </if>
+        <if test="communityCode!=null and communityCode!=''">
+            AND dh.lianjia_community_id = #{communityCode}
+        </if>
+        <if test="fromDate!=null">
+            AND dh.deal_date >= #{fromDate}
+        </if>
+        GROUP BY deal_year,deal_month
+    </select>
+
+    <select id="test">
+        select * from community_history_deal
+        <where>
+
+        </where>
+    </select>
+
+    <update id="updateListPrice" parameterType="com.fxg.house.viewer.entity.CommunityHistoryDeal">
+        update community_history_deal set
+        deal_price = #{dealPrice},
+        list_price = #{listPrice},
+        deal_cycle = #{dealCycle},
+        list_date = #{listDate}
+        where lianjia_house_id = #{lianjiaHouseId}
+    </update>
+
+    <update id="updateDealCycle">
+        UPDATE community_history_deal SET deal_cycle = TIMESTAMPDIFF(DAY,list_date,deal_date) WHERE list_date IS NOT NULL AND deal_date IS NOT NULL and deal_cycle IS NULL
+    </update>
+
+    <select id="queryDealPosition" resultType="com.fxg.house.viewer.dto.HistoryDealPositionDTO">
+        SELECT hd.id,hd.deal_unit_price,hd.list_price,hd.deal_price,c.longitude2 longitude,c.latitude2 latitude
+        FROM community_history_deal hd
+        LEFT JOIN community c ON hd.lianjia_community_id = c.lianjia_id
+        WHERE
+        hd.city_code = #{cityCode}
+        <if test="fromDate!=null">
+            AND hd.deal_date &gt;= #{fromDate}
+        </if>
+        <if test="toDate!=null">
+            AND hd.deal_date &lt;= #{toDate}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,36 @@
+server:
+  port: 8083
+
+
+spring:
+  application:
+    name: house-service
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/house-db?characterEncoding=UTF8&useSSL=false&serverTimezone=UTC
+    hikari:
+      max-lifetime: 180000
+
+mybatis-plus:
+  mapper-locations: classpath*:mapperXML/*Mapper.xml
+  global-config:
+    db-config:
+      id-type: auto
+    banner: false
+  configuration:
+    map-underscore-to-camel-case: true
+    call-setters-on-nulls: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+    default-enum-type-handler: com.fxg.house.viewer.config.AutoEnumTypeHandler
+
+fxg:
+  config:
+    aMap:
+      key:  #高德地图apiKey
+    bMap:
+      key:  #百度地图apiKey

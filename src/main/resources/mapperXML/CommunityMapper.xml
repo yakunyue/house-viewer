@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxg.house.viewer.mapper.CommunityMapper">
+
+    <!--<cache/>-->
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into community
+        (name, ninety_days_deal_num, on_rent_num, on_sale_num, completion_year, reference_price, lianjia_id, page_no, city_code,
+         county_code, street_code, update_day, update_hour)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.name},
+            #{item.ninetyDaysDealNum},
+            #{item.onRentNum},
+            #{item.onSaleNum},
+            #{item.completionYear},
+            #{item.referencePrice},
+            #{item.lianjiaId},
+            #{item.pageNo},
+            #{item.cityCode},
+            #{item.countyCode},
+            #{item.streetCode},
+            #{item.updateDay},
+            #{item.updateHour}
+            )
+        </foreach>
+    </insert>
+
+
+    <select id="queryAlreadyExist" resultType="com.fxg.house.viewer.entity.Community">
+        select name, ninety_days_deal_num, on_rent_num, on_sale_num, completion_year, reference_price, lianjia_id, page_no, city_code, county_code,street_code from community where lianjia_id in (
+        <foreach collection="list" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+        )
+    </select>
+
+
+    <update id="updateCommunity" parameterType="com.fxg.house.viewer.entity.Community">
+        update community
+        <set>
+            <if test="name != null and name != ''">name = #{name},</if>
+            <if test="ninetyDaysDealNum != null">ninety_days_deal_num = #{ninetyDaysDealNum},</if>
+            <if test="onRentNum != null">on_rent_num = #{onRentNum},</if>
+            <if test="onSaleNum != null">on_sale_num = #{onSaleNum},</if>
+            <if test="completionYear != null">completion_year = #{completionYear},</if>
+            <if test="referencePrice != null">reference_price = #{referencePrice},</if>
+            <if test="cityCode != null and cityCode != ''">city_code = #{cityCode},</if>
+            <if test="countyCode != null and countyCode != ''">county_code = #{countyCode},</if>
+        </set>
+        <where>
+            lianjia_id = #{lianjiaId}
+        </where>
+    </update>
+
+
+    <update id="updateDetailByLianjiaId" parameterType="com.fxg.house.viewer.entity.Community">
+        update community
+        <set>
+            <if test="buildingType != null and buildingType != ''">building_type = #{buildingType},</if>
+            <if test="propertyCompany != null and propertyCompany != ''">property_company = #{propertyCompany},</if>
+            <if test="developCompany != null and developCompany != ''">develop_company = #{developCompany},</if>
+            <if test="buildingNum != null">building_num = #{buildingNum},</if>
+            <if test="houseNum != null">house_num = #{houseNum},</if>
+        </set>
+        <where>
+            lianjia_id = #{lianjiaId}
+        </where>
+    </update>
+
+
+    <select id="queryLianjiaIdList" resultType="java.lang.String">
+        select distinct lianjia_id from community where city_code = #{cityCode} and street_code = #{streetCode}
+    </select>
+
+    <update id="updateReferencePrice">
+        update community set reference_price = #{referencePrice} where lianjia_id = #{lianjiaId}
+    </update>
+
+    <update id="updateDayAndHour">
+        update community set update_day = #{updateDay},update_hour = #{updateHour} where id =#{id}
+    </update>
+
+    <select id="queryThisHourCommunity" resultType="com.fxg.house.viewer.entity.Community">
+        select * from community where update_hour = #{hour} and (update_day = #{day} or update_day = #{nextDay} or is_watched = 1)
+    </select>
+
+    <!--<select id="queryThisHourCommunity" resultType="com.fxg.house.viewer.entity.Community">-->
+        <!--select * from community where update_hour = #{hour}-->
+    <!--</select>-->
+
+    <update id="updateLocation">
+        update community set longitude = #{longitude},latitude = #{latitude},address = #{address} where id = #{id}
+    </update>
+
+    <update id="updateCityName">
+        UPDATE community c SET
+        c.city_name = (SELECT NAME FROM city WHERE CODE = c.city_code),
+        c.county_name = (SELECT NAME FROM county WHERE CODE = c.county_code),
+        c.street_name = (SELECT NAME FROM street WHERE CODE = c.street_code)
+        WHERE city_name IS NULL
+    </update>
+
+    <update id="upToBaiduLocation">
+        update community set longitude2 = #{longitude2},latitude2 = #{latitude2} where id = #{id}
+    </update>
+</mapper>

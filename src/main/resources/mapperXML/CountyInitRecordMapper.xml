@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxg.house.viewer.mapper.CountyInitRecordMapper">
+
+    <!--<cache/>-->
+
+    <update id="updateIsPressing">
+        update county_init_record set is_pressing = #{isPressing} where id = #{id}
+    </update>
+
+    <update id="updateStartTime">
+        update county_init_record set start_time = #{startTime} where id = #{id}
+    </update>
+
+    <update id="updateCommunityNumAndLastUpdateTime">
+        UPDATE county_init_record SET community_num = (SELECT COUNT(0) FROM community WHERE county_code = #{countyCode}),
+        community_last_update_time = NOW() WHERE county_code = #{countyCode}
+    </update>
+
+    <update id="updateInitPhase">
+        update county_init_record set phase = #{phase} where id = #{id}
+    </update>
+
+    <update id="updateDealNumAndLastUpdateTime">
+        UPDATE county_init_record SET deal_num = (SELECT COUNT(0) FROM community_history_deal WHERE county_code = #{countyCode}),
+        deal_history_last_update_time = NOW() WHERE county_code = #{countyCode}
+    </update>
+
+    <update id="updateHouseNum">
+        update county_init_record set house_num = #{houseNum},phase = 70 where id = #{id}
+    </update>
+
+    <select id="queryCountyInitRecodeByCityCode" resultType="com.fxg.house.viewer.entity.CountyInitRecord">
+        select * from county_init_record where city_code = #{cityCode}
+    </select>
+</mapper>

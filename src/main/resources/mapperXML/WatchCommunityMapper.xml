@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fxg.house.viewer.mapper.WatchCommunityMapper">
+
+    <!--<cache/>-->
+
+    <insert id="insertBatch" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+        insert into watch_community
+        (community_id, lianjia_community_id, suer_id, city_code, county_code,street_code)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+            #{item.communityId},
+            #{item.lianjiaCommunityId},
+            #{item.userId},
+            #{item.cityCode},
+            #{item.countyCode},
+            #{item.streetCode}
+            )
+        </foreach>
+    </insert>
+</mapper>
