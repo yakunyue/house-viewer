@@ -26,18 +26,18 @@
 3. 启动项目
    
 * 访问：http://localhost:8083，即可看到如下页面：
-[](https://github.com/yakunyue/house-viewer/img/01.png)
+![01](https://github.com/yakunyue/house-viewer/img/01.png)
 
 4. 初始化自己关心的区县数据 
    
 * 点击左侧导航栏 小链家》初始化列表，点击右上角的增加区县按钮；
-[](/yakunyue/house-viewer/img/02.png)
+![01](/yakunyue/house-viewer/img/02.png)
 
 * 点击选择框，选择想要初始化的区县；
-[](/img/03.png)
+![01](/img/03.png)
 
 * 以河南省 郑州市 郑东新区为例，选完后点击右上角的增加区县按钮；
-[](img/04.png)
+![01](img/04.png)
 
 * 此时，初始化列表页面即可看到刚刚增加的条目；
 [](/yakunyue/house-viewer/img/05.png)
