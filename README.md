@@ -12,6 +12,9 @@
 * 体验账号：xhh  体验密码：123789
 
 ## 部署步骤
+0. 克隆本项目到本地
+   git clone https://github.com/yakunyue/house-viewer
+
 1. 创建mysql数据库
    
    创建一个名称为 house-db 的 mysql 数据库；
